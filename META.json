@@ -37,16 +37,52 @@
       },
       "runtime" : {
          "requires" : {
+            "Carp::Always" : "0",
+            "Cwd" : "0",
+            "Data::Dumper" : "0",
+            "DateTime" : "0",
+            "DateTime::TimeZone" : "0",
+            "Env" : "0",
+            "File::Details" : "0",
+            "File::Path" : "0",
+            "List::Uniq" : "0",
+            "Moose::Role" : "0",
+            "Moose::Util::TypeConstraints" : "0",
+            "Sys::Hostname" : "0",
+            "YAML" : "0",
+            "YAML::XS" : "0",
+            "namespace::autoclean" : "0",
             "perl" : "5.008005"
          }
       },
       "test" : {
          "requires" : {
-            "Test::More" : "0.96"
+            "Capture::Tiny" : "0",
+            "File::Slurp" : "0",
+            "FindBin" : "0",
+            "HPC::Runner::Command" : "0",
+            "IPC::Cmd" : "0",
+            "Slurp" : "0",
+            "Test::Class::Moose" : "0",
+            "Test::Class::Moose::Load" : "0",
+            "Test::Class::Moose::Runner" : "0",
+            "Test::More" : "0.96",
+            "strict" : "0"
          }
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/jerowe/HPC-Runner-Command-Plugin-Blog/issues"
+      },
+      "homepage" : "https://github.com/jerowe/HPC-Runner-Command-Plugin-Blog",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/jerowe/HPC-Runner-Command-Plugin-Blog.git",
+         "web" : "https://github.com/jerowe/HPC-Runner-Command-Plugin-Blog"
+      }
+   },
    "version" : "0.01",
    "x_serialization_backend" : "Cpanel::JSON::XS version 3.0217"
 }

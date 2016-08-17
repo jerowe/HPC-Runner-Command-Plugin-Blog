@@ -1,3 +1,11 @@
+# HPC::Runner::Command::Plugin::Logger::Blog;
+
+Pretty log files in a hexo blog!
+
+## Attributes
+
+## Subroutines
+
 # NAME
 
 HPC::Runner::Command::Plugin::Blog - Blah blah blah

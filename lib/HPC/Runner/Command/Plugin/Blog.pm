@@ -14,12 +14,12 @@ use DateTime;
 use DateTime::TimeZone;
 use List::Uniq ':all';
 use File::Details;
-use Carp::Always;
 use Data::Dumper;
 use Moose::Util::TypeConstraints;
 use Env;
 use Sys::Hostname;
 
+#use Carp::Always;
 
 =head1 HPC::Runner::Command::Plugin::Logger::Blog;
 
