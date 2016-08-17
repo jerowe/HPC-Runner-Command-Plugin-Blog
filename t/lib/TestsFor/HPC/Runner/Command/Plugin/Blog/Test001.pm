@@ -8,8 +8,6 @@ use File::Path qw(make_path remove_tree);
 use IPC::Cmd qw[can_run];
 use Data::Dumper;
 use Capture::Tiny ':all';
-use Slurp;
-use File::Slurp;
 use DateTime;
 
 sub construct_001 {
