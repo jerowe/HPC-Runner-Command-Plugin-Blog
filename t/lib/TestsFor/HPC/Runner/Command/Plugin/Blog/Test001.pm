@@ -54,11 +54,14 @@ sub construct_002 {
     return $test;
 }
 
+sub construct_003 {
+
+}
+
 sub test_001 : Tags(prep) {
     my $test = shift;
 
     remove_tree("$Bin/test001");
-    make_path("$Bin/test001/script");
 
     ok(1);
 }
@@ -66,6 +69,7 @@ sub test_001 : Tags(prep) {
 sub test_002 : Tags(prep) {
     my $test = shift;
 
+    make_path("$Bin/test001/script");
     open( my $fh, ">$Bin/test001/script/test001.1.sh" );
     print $fh <<EOF;
 #HPC jobname=job01
