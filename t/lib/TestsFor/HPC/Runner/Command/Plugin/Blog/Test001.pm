@@ -19,6 +19,7 @@ sub construct_001 {
 
     my $ymd = $dt->ymd();
 
+    #TODO How to decide version?
     MooseX::App::ParsedArgv->new(
         argv => [
             "execute_job",
@@ -29,7 +30,7 @@ sub construct_001 {
             "--logname",
             "001_job01",
             "--process_table",
-            "$Bin/test001/hpc-runner/logs/$ymd-slurm_logs/001-process_table.md"
+            "$Bin/test001/hpc-runner/0.1/logs/$ymd-slurm_logs/001-process_table.md"
         ]
     );
 
@@ -97,16 +98,18 @@ sub test_004 : Tags(submit_jobs) {
     my $self = shift;
 
     my $test = construct_002;
-    $test->execute();
+
+    capture { $test->execute() };
+
     ok(1);
 }
 
 sub test_005 : Tags(execute_jobs) {
     my $self = shift;
 
+    diag('testing execute jobs!');
     $ENV{SBATCH_JOB_ID} = '1234';
     my $test = construct_001;
-    $test->gen_load_plugins();
 
     $test->execute();
 
