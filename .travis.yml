@@ -17,7 +17,7 @@ before_install:
   - build-dist
   - cd $BUILD_DIR             # $BUILD_DIR is set by the build-dist command
 install:
-  - cpanm git@github.com:jerowe/HPC-Runner-Command.git
+  - cpanm https://github.com/jerowe/HPC-Runner-Command.git
   - cpanm --notest Package::DeprecationManager
   - cpanm --notest --installdeps .
   - cpanm --quiet --notest --skip-satisfied Dist::Milla
