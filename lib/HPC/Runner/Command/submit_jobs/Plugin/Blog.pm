@@ -13,7 +13,6 @@ after 'execute' => sub {
     $self->print_process_log_header;
 };
 
-#TODO where should this go
 sub env_log {
     my $self = shift;
 
@@ -72,5 +71,22 @@ sub print_process_log_header {
 
     close $p;
 }
+
+around 'create_plugin_str' => sub {
+
+    my $orig = shift;
+    my $self = shift;
+
+    $self->job_plugins( [] ) unless $self->job_plugins;
+
+    push(
+        @{ $self->job_plugins },
+        'HPC::Runner::Command::execute_job::Plugin::Blog'
+    );
+
+    my $val = $self->$orig(@_);
+
+    return $val;
+};
 
 1;

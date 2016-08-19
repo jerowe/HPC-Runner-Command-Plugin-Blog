@@ -54,9 +54,10 @@ sub construct_002 {
     return $test;
 }
 
-sub construct_003 {
+#Test for new
+#sub construct_003 {
 
-}
+#}
 
 sub test_001 : Tags(prep) {
     my $test = shift;

@@ -51,11 +51,11 @@ EOF
         my $n = $1;
 
         #Rename the old file to -000
-        my $old_lf = $self->logfile;
+        my $old_lf  = $self->logfile;
         my $move_lf = $old_lf;
         $move_lf =~ s/CMD_$n/CMD_$n-000/;
 
-        move($self->logdir."/".$old_lf, $self->logdir."/".$move_lf);
+        move( $self->logdir . "/" . $old_lf, $self->logdir . "/" . $move_lf );
 
         #Create new log file
         $lf =~ s/CMD_$n/CMD_$n-001/;
@@ -65,5 +65,6 @@ EOF
         $self->command_log( $self->init_log );
     }
 };
+
 
 1;
