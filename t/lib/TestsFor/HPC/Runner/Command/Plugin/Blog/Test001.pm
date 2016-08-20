@@ -11,24 +11,47 @@ use Capture::Tiny ':all';
 use DateTime;
 
 sub make_test_dir{
+
     my $test_dir;
 
+    my @chars = ('a'..'z', 'A'..'Z', 0..9);
+    my $string = join '', map { @chars[rand @chars]  } 1 .. 8;
+
     if(exists $ENV{'TMP'}){
-        $test_dir = $ENV{TMP}."/hpcrunner/test001";
+        $test_dir = $ENV{TMP}."/hpcrunner/$string";
     }
     else{
-        $test_dir = "/tmp/hpcrunner/test001";
+        $test_dir = "/tmp/hpcrunner/$string";
     }
 
     make_path($test_dir);
+    make_path("$test_dir/script");
 
     chdir($test_dir);
+
     if(can_run('git') && !-d $test_dir."/.git"){
         system('git init');
     }
 
+    open( my $fh, ">$test_dir/script/test001.1.sh" );
+
+    print $fh <<EOF;
+echo "hello world from job 1" && sleep 5
+
+echo "hello again from job 2" && sleep 5
+
+echo "goodbye from job 3"
+
+#NOTE job_tags=hello,world
+echo "hello again from job 3" && sleep 5
+
+EOF
+
+    close($fh);
+
     return $test_dir;
 }
+
 
 sub test_shutdown {
 
@@ -58,8 +81,6 @@ sub construct_001 {
             "0.01",
             "--logname",
             "001_job01",
-            "--process_table",
-            "$test_dir/hpc-runner/0.01/logs/$ymd-slurm_logs/001-process_table.md"
         ]
     );
 
@@ -82,38 +103,6 @@ sub construct_002 {
     $test->logname('slurm_logs');
 
     return $test;
-}
-
-sub test_002 : Tags(prep) {
-    my $test = shift;
-
-    my $test_dir = make_test_dir;
-    make_path("$test_dir/script");
-
-    open( my $fh, ">$test_dir/script/test001.1.sh" );
-    print $fh <<EOF;
-#HPC jobname=job01
-#HPC cpus_per_task=12
-#HPC commands_per_node=1
-
-#NOTE job_tags=Sample1
-echo "hello world from job 1" && sleep 5
-
-#NOTE job_tags=Sample2
-echo "hello again from job 2" && sleep 5
-
-#NOTE job_tags=Sample3
-echo "goodbye from job 3"
-EOF
-
-    close($fh);
-
-    if( can_run('git') ){
-        system('git add -A');
-        system('git commit -m "test commit"');
-    }
-
-    ok(1);
 }
 
 sub test_003 : Tags(require) {
