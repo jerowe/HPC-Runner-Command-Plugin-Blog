@@ -10,10 +10,37 @@ use Data::Dumper;
 use Capture::Tiny ':all';
 use DateTime;
 
+sub make_test_dir{
+    my $test_dir;
+
+    if(exists $ENV{'TMP'}){
+        $test_dir = $ENV{TMP}."/hpcrunner/test001";
+    }
+    else{
+        $test_dir = "/tmp/hpcrunner/test001";
+    }
+
+    make_path($test_dir);
+
+    chdir($test_dir);
+    if(can_run('git') && !-d $test_dir."/.git"){
+        system('git init');
+    }
+
+    return $test_dir;
+}
+
+sub test_shutdown {
+
+    my $test_dir = make_test_dir;
+    chdir("$Bin");
+    remove_tree($test_dir);
+}
+
 sub construct_001 {
 
-    chdir("$Bin/test001");
-    my $t = "$Bin/test001/script/test001.1.sh";
+    my $test_dir = make_test_dir;
+    my $t = "$test_dir/script/test001.1.sh";
 
     my $dt = DateTime->now( time_zone => 'local' );
 
@@ -27,10 +54,12 @@ sub construct_001 {
             $t,
             "--job_plugins",
             "Blog",
+            "--version",
+            "0.01",
             "--logname",
             "001_job01",
             "--process_table",
-            "$Bin/test001/hpc-runner/0.01/logs/$ymd-slurm_logs/001-process_table.md"
+            "$test_dir/hpc-runner/0.01/logs/$ymd-slurm_logs/001-process_table.md"
         ]
     );
 
@@ -42,8 +71,8 @@ sub construct_001 {
 
 sub construct_002 {
 
-    chdir("$Bin/test001");
-    my $t = "$Bin/test001/script/test001.1.sh";
+    my $test_dir = make_test_dir;
+    my $t = "$test_dir/script/test001.1.sh";
 
     MooseX::App::ParsedArgv->new( argv =>
             [ "submit_jobs", "--infile", $t, "--hpc_plugins", "Dummy,Blog" ]
@@ -55,24 +84,13 @@ sub construct_002 {
     return $test;
 }
 
-#Test for new
-#sub construct_003 {
-
-#}
-
-sub test_001 : Tags(prep) {
-    my $test = shift;
-
-    remove_tree("$Bin/test001");
-
-    ok(1);
-}
-
 sub test_002 : Tags(prep) {
     my $test = shift;
 
-    make_path("$Bin/test001/script");
-    open( my $fh, ">$Bin/test001/script/test001.1.sh" );
+    my $test_dir = make_test_dir;
+    make_path("$test_dir/script");
+
+    open( my $fh, ">$test_dir/script/test001.1.sh" );
     print $fh <<EOF;
 #HPC jobname=job01
 #HPC cpus_per_task=12
@@ -90,6 +108,11 @@ EOF
 
     close($fh);
 
+    if( can_run('git') ){
+        system('git add -A');
+        system('git commit -m "test commit"');
+    }
+
     ok(1);
 }
 
@@ -101,12 +124,10 @@ sub test_003 : Tags(require) {
 }
 
 sub test_004 : Tags(submit_jobs) {
-    my $self = shift;
 
     my $test = construct_002;
 
     capture { $test->execute() };
-    system("git tag -d ".$test->version);
 
     ok(1);
 }
@@ -119,7 +140,6 @@ sub test_005 : Tags(execute_jobs) {
     my $test = construct_001;
 
     $test->execute();
-    system("git tag -d ".$test->version);
 
     ok(1);
 }

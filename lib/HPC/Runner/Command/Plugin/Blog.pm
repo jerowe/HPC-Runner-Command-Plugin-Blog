@@ -40,8 +40,6 @@ Pretty log files in a hexo blog!
 before 'init_log' => sub {
     my $self = shift;
 
-    $self->app_log->warn('we are here!');
-
     my $tt = $self->logfile;
     if ( $tt =~ m/\.log$/ ) {
         $tt =~ s/\.log/\.md/g;
