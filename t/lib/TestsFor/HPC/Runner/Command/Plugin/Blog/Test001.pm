@@ -57,7 +57,6 @@ sub test_shutdown {
 
     my $test_dir = make_test_dir;
     chdir("$Bin");
-    remove_tree($test_dir);
 }
 
 sub construct_001 {
@@ -85,7 +84,6 @@ sub construct_001 {
     );
 
     my $test = HPC::Runner::Command->new_with_command();
-    $test->version("0.01");
 
     return $test;
 }
