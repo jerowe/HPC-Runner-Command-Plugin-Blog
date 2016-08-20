@@ -1,8 +1,11 @@
 package HPC::Runner::Command::submit_jobs::Plugin::Blog;
+
 use Moose::Role;
 use Data::Dumper;
 use YAML;
 use YAML::XS 'LoadFile';
+use File::Basename;
+use File::Path qw(make_path remove_tree);
 
 with 'HPC::Runner::Command::Plugin::Blog';
 
@@ -59,8 +62,12 @@ sub print_process_log_header {
     my($dt, $ymd, $hms) = $self->datetime_now;
     my $tt = $dt->strftime('%F %T %z');
 
+    if(! -e $self->process_table){
+        make_path(dirname($self->process_table));
+    }
+
     open(my $p, ">>" . $self->process_table )
-        or die print "Couldn't open log file what is happening here!? $!\n";
+        or die $self->app_log->warn("Couldn't open log file please make sure you have the necessary permissions. $!\n");
 
     my $tags = $self->tags;
     push( @$tags, 'process_table' );

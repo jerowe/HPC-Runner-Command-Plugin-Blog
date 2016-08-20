@@ -30,11 +30,12 @@ sub construct_001 {
             "--logname",
             "001_job01",
             "--process_table",
-            "$Bin/test001/hpc-runner/0.1/logs/$ymd-slurm_logs/001-process_table.md"
+            "$Bin/test001/hpc-runner/0.01/logs/$ymd-slurm_logs/001-process_table.md"
         ]
     );
 
     my $test = HPC::Runner::Command->new_with_command();
+    $test->version("0.01");
 
     return $test;
 }
@@ -105,6 +106,7 @@ sub test_004 : Tags(submit_jobs) {
     my $test = construct_002;
 
     capture { $test->execute() };
+    system("git tag -d ".$test->version);
 
     ok(1);
 }
@@ -117,6 +119,7 @@ sub test_005 : Tags(execute_jobs) {
     my $test = construct_001;
 
     $test->execute();
+    system("git tag -d ".$test->version);
 
     ok(1);
 }
