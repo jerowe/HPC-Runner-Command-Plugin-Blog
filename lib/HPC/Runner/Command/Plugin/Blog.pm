@@ -87,16 +87,18 @@ sub print_log_yaml {
 
     #Already in main
     my $orig_tags = $self->tags;
-    my $meta      = $self->pop_note_meta;
-    if ($meta) {
-        $self->set_job_tag( $pid => $meta );
-    }
+    my $task_tags      = $self->pop_note_meta;
+
+    #Do I need this?
+    #if ($task_tags && $pid) {
+	#$self->set_task_tag( $pid => $task_tags );
+    #}
 
     #Move this to main
     push( @{$orig_tags}, hostname );
 
-    if ($meta) {
-        foreach my $m (@$meta) {
+    if ($task_tags) {
+        foreach my $m (@$task_tags) {
             next unless $m;
             push( @$orig_tags, $m );
         }
@@ -136,7 +138,8 @@ sub get_title {
 
     if ( $lf =~ m/CMD_(\d+)/ ) {
         $counter = $1;
-        $pid     = $self->get_job_tag($counter);
+	#PID is also in the file name
+        $pid     = $self->get_task_tag($counter);
     }
 
     elsif ( $lf =~ m/MAIN/ ) {

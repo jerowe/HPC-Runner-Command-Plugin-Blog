@@ -66,15 +66,17 @@ sub print_process_log_header {
         make_path(dirname($self->process_table));
     }
 
-    open(my $p, ">>" . $self->process_table )
+    open(my $p, ">" . $self->process_table )
         or die $self->app_log->warn("Couldn't open log file please make sure you have the necessary permissions. $!\n");
 
     my $tags = $self->tags;
-    push( @$tags, 'process_table' );
+    push( @$tags, 'task_table' );
 
     my $hash = { title => "Process Table", tags => $tags, date => "$tt" };
     print $p Dump $hash;
     print $p "---\n\n";
+
+    print $p "||Version|| Scheduler Id || Jobname || Task Tags || ProcessID || ExitCode || Duration ||\n";
 
     close $p;
 }
@@ -88,7 +90,7 @@ around 'create_plugin_str' => sub {
 
     push(
         @{ $self->job_plugins },
-        'HPC::Runner::Command::execute_job::Plugin::Blog'
+        'Blog'
     );
 
     my $val = $self->$orig(@_);
