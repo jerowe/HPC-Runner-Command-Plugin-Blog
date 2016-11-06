@@ -66,5 +66,31 @@ EOF
     }
 };
 
+=head3 log_table
+
+Adds exit code to Blog tags
+
+=cut
+
+before 'log_table' => sub {
+    my $self     = shift;
+    my $cmdpid   = shift;
+    my $exitcode = shift;
+    my $duration = shift;
+
+    ###Add Exit Code to front matter tags
+    ##Should have something so that on multipart logs its ok
+    my $logfile  = $self->logdir . "/" . $self->logfile;
+    my $add_tags = <<EOF;
+sed -i '/tags:/a\\  - ExitCode$exitcode' $logfile
+EOF
+    system($add_tags);
+
+    ###PostProcess?
+    my $postprocess = <<EOF;
+    sed -i '50 c\<!-- more -->' $logfile
+EOF
+    system($postprocess);
+};
 
 1;
